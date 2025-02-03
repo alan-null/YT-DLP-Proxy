@@ -5,6 +5,7 @@ var cache = new ConcurrentDictionary<string, string>();
 var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 app.Urls.Add("http://*:497");
 
@@ -14,6 +15,8 @@ app.MapGet("/bestAudio", async (string v) =>
     {
         return Results.BadRequest("Parameter 'v' is required.");
     }
+
+    logger.LogInformation($"Requested VideoId: {v}");
 
     if (cache.TryGetValue(v, out var cachedUrl))
     {
